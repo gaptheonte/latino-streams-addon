@@ -1390,6 +1390,7 @@ app.get("/debug/sources", async (req, res) => {
 app.use(getRouter(builder.getInterface()));
 
 const PORT = process.env.PORT || 7000;
-app.listen(PORT, () => {
-	console.log(`Latino Streams escuchando en http://127.0.0.1:${PORT}/manifest.json`);
+
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Latino Streams escuchando en el puerto ${PORT}`);
 });
