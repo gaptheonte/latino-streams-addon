@@ -1144,7 +1144,8 @@ builder.defineStreamHandler(async ({ type, id, config }) => {
 
 async function _streamHandlerInner({ type, id, config }) {
 	try {
-		const { torboxKey = "", instantOnly = true, maxResults = "8" } = config || {};
+		const cfg = config || {};
+		const { torboxKey = "", instantOnly = true, maxResults = "8" } = cfg;
 		const max = Math.min(Math.max(parseInt(maxResults, 10) || 8, 1), 12);
 
 		const parts = String(id).split(":");
@@ -1159,16 +1160,16 @@ async function _streamHandlerInner({ type, id, config }) {
 				season,
 				episode,
 				config: {
-					srcTorrentio: config.srcTorrentio !== false,
-					srcEztv: config.srcEztv !== false,
-					srcGrantorrent: config.srcGrantorrent !== false,
-					srcElitetorrent: config.srcElitetorrent !== false,
-					srcMitorrent: config.srcMitorrent !== false,
-					srcHacktorrent: config.srcHacktorrent !== false,
-				srcPelispanda: config.srcPelispanda !== false,
-					extraSources: config.extraSources || "",
-					torznabUrl: (config.torznabUrl || "").trim(),
-					torznabKey: config.torznabKey || "",
+					srcTorrentio: cfg.srcTorrentio !== false,
+					srcEztv: cfg.srcEztv !== false,
+					srcGrantorrent: cfg.srcGrantorrent !== false,
+					srcElitetorrent: cfg.srcElitetorrent !== false,
+					srcMitorrent: cfg.srcMitorrent !== false,
+					srcHacktorrent: cfg.srcHacktorrent !== false,
+					srcPelispanda: cfg.srcPelispanda !== false,
+					extraSources: cfg.extraSources || "",
+					torznabUrl: (cfg.torznabUrl || "").trim(),
+					torznabKey: cfg.torznabKey || "",
 				},
 			}),
 			HTTP_SOURCES_ENABLED.length
@@ -1265,7 +1266,7 @@ const addonInterface = builder.getInterface();
 const app = express();
 
 // Página de configuración auto-generada (formulario con la API key de TorBox)
-app.get("/configure", (req, res) => {
+app.get(["/configure", "/:config/configure"], (req, res) => {
 	res.setHeader("content-type", "text/html; charset=utf-8");
 	res.end(`<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Configurar Latino Streams ⚡</title>
@@ -1387,10 +1388,14 @@ app.get("/debug/sources", async (req, res) => {
 });
 
 // Rutas del protocolo Stremio (manifest, stream) — con soporte de config en la URL
-app.use(getRouter(builder.getInterface()));
+app.use(getRouter(addonInterface));
 
 const PORT = process.env.PORT || 7000;
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Latino Streams escuchando en el puerto ${PORT}`);
-});
+if (require.main === module && !process.env.VERCEL) {
+	app.listen(PORT, "0.0.0.0", () => {
+		console.log(`Latino Streams escuchando en el puerto ${PORT}`);
+	});
+}
+
+module.exports = app;

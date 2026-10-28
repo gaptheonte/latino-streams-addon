@@ -78,6 +78,18 @@ indexadores actualizados — incluyendo trackers en español:
 
 ## Despliegue (para usarlo en todos tus dispositivos)
 
+### Opción Vercel (Serverless — Plan Hobby gratuito)
+
+El proyecto incluye `api/index.js` y `vercel.json` listos para Vercel Serverless Functions:
+
+1. Sube los cambios a tu repositorio de GitHub (`gaptheonte/latino-streams-addon`).
+2. En [vercel.com/new](https://vercel.com/new), importa el repositorio desde GitHub.
+3. Conserva los valores por defecto (Root Directory `./`, sin variables de entorno obligatorias; la API Key de TorBox se configura desde `/configure`).
+4. Pulsa **Deploy**.
+5. Una vez publicado:
+   - Manifiesto base: `https://<tu-proyecto>.vercel.app/manifest.json`
+   - Panel de configuración: `https://<tu-proyecto>.vercel.app/configure`
+
 ### Opción A — Render (gratis)
 
 1. Sube este proyecto a un repo de GitHub.
